@@ -50,6 +50,38 @@ namespace SlothEnterprise.ProductApplication.Applications
         }
     }
 
+    public class ConfidentialInvoiceApplication : ISellerApplication<ConfidentialInvoiceDiscount>, IHasCompanyData
+    {
+        private IConfidentialInvoiceService _confidentialInvoiceService;
+
+        public ISellerCompanyData CompanyData { get; set; }
+        public ConfidentialInvoiceDiscount Product { get; set; }
+
+        public ConfidentialInvoiceApplication(IConfidentialInvoiceService confidentialInvoiceService)
+        {
+            _confidentialInvoiceService = confidentialInvoiceService;
+        }
+
+        public ApplicationResultEnum Submit()
+        {
+            return _confidentialInvoiceService.SubmitApplicationFor(
+                           GetCompanyDataFromSellerCompanyData(),
+                           Product.TotalLedgerNetworth, Product.AdvancePercentage, Product.VatRate)
+                .GetReturnCodeFromApplicationResult();
+        }
+
+        public CompanyDataRequest GetCompanyDataFromSellerCompanyData()
+        {
+            return new CompanyDataRequest()
+            {
+                CompanyFounded = CompanyData.Founded,
+                CompanyNumber = CompanyData.Number,
+                CompanyName = CompanyData.Name,
+                DirectorName = CompanyData.DirectorName
+            };
+        }
+    }
+
     public static class ApplicationResultExtensions
     {
         /// <summary>
