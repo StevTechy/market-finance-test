@@ -3,8 +3,6 @@ using SlothEnterprise.External.V1;
 using SlothEnterprise.ProductApplication.Applications;
 using SlothEnterprise.ProductApplication.Products;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace SlothEnterprise.ProductApplication.Tests

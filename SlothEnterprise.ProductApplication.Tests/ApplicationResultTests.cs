@@ -1,9 +1,6 @@
 ﻿using Moq;
 using SlothEnterprise.External;
 using SlothEnterprise.ProductApplication.Applications;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace SlothEnterprise.ProductApplication.Tests
