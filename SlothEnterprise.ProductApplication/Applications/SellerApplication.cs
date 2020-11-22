@@ -82,6 +82,47 @@ namespace SlothEnterprise.ProductApplication.Applications
         }
     }
 
+    public class BusinessLoansApplication : ISellerApplication<BusinessLoans>, IHasCompanyData
+    {
+        private IBusinessLoansService _businessLoansService;
+
+        public ISellerCompanyData CompanyData { get; set; }
+        public BusinessLoans Product { get; set; }
+
+        public BusinessLoansApplication(IBusinessLoansService businessLoansService)
+        {
+            _businessLoansService = businessLoansService;
+        }
+
+        public ApplicationResultEnum Submit()
+        {
+            return _businessLoansService.SubmitApplicationFor(
+                    GetCompanyDataFromSellerCompanyData(),
+                    GetLoansRequestFromBusinessLoans())
+                .GetReturnCodeFromApplicationResult();
+        }
+
+        public CompanyDataRequest GetCompanyDataFromSellerCompanyData()
+        {
+            return new CompanyDataRequest()
+            {
+                CompanyFounded = CompanyData.Founded,
+                CompanyNumber = CompanyData.Number,
+                CompanyName = CompanyData.Name,
+                DirectorName = CompanyData.DirectorName
+            };
+        }
+
+        public LoansRequest GetLoansRequestFromBusinessLoans()
+        {
+            return new LoansRequest()
+            {
+                InterestRatePerAnnum = Product.InterestRatePerAnnum,
+                LoanAmount = Product.LoanAmount
+            };
+        }
+    }
+
     public static class ApplicationResultExtensions
     {
         /// <summary>
