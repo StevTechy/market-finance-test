@@ -1,4 +1,5 @@
 ﻿using SlothEnterprise.External;
+using SlothEnterprise.External.V1;
 using SlothEnterprise.ProductApplication.Products;
 
 namespace SlothEnterprise.ProductApplication.Applications
@@ -18,6 +19,35 @@ namespace SlothEnterprise.ProductApplication.Applications
     public interface IHasCompanyData
     {
         CompanyDataRequest GetCompanyDataFromSellerCompanyData();
+    }
+
+    public class SelectiveInvoiceDiscountApplication : ISellerApplication<SelectiveInvoiceDiscount>, IHasCompanyData
+    {
+        private ISelectInvoiceService _selectInvoiceService;
+
+        public ISellerCompanyData CompanyData { get; set; }
+        public SelectiveInvoiceDiscount Product { get; set; }
+
+        public SelectiveInvoiceDiscountApplication(ISelectInvoiceService selectInvoiceService)
+        {
+            _selectInvoiceService = selectInvoiceService;
+        }
+
+        public ApplicationResultEnum Submit()
+        {
+            return (ApplicationResultEnum)_selectInvoiceService.SubmitApplicationFor(
+                    GetCompanyDataFromSellerCompanyData().CompanyNumber.ToString(),
+                    Product.InvoiceAmount,
+                    Product.AdvancePercentage);
+        }
+
+        public CompanyDataRequest GetCompanyDataFromSellerCompanyData()
+        {
+            return new CompanyDataRequest()
+            {
+                CompanyNumber = CompanyData.Number
+            };
+        }
     }
 
     public static class ApplicationResultExtensions
