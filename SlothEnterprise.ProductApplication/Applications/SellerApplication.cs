@@ -4,16 +4,20 @@ using SlothEnterprise.ProductApplication.Products;
 namespace SlothEnterprise.ProductApplication.Applications
 {
 
-    public interface ISellerApplication
+    public interface ISellerApplication<T> where T : IProduct
     {
-        IProduct Product { get; set; }
+        T Product { get; set; }
         ISellerCompanyData CompanyData { get; set; }
+        /// <summary>
+        /// Submits the application of a given type to its corresponding service,
+        /// </summary>
+        /// <returns>An enumeration determining whether the submission was successful or failed</returns>
+        ApplicationResultEnum Submit();
     }
 
-    public class SellerApplication : ISellerApplication
+    public interface IHasCompanyData
     {
-        public IProduct Product { get; set; }
-        public ISellerCompanyData CompanyData { get; set; }
+        CompanyDataRequest GetCompanyDataFromSellerCompanyData();
     }
 
     public static class ApplicationResultExtensions
